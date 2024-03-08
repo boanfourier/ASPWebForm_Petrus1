@@ -1,57 +1,81 @@
 ﻿@model IEnumerable<MyWebFormApp.BLL.DTOs.ArticleDTO>
 
+<div class="modal" id="imageModal" tabindex="-1" role="dialog">
+    <!-- ... (modal HTML structure remains unchanged) ... -->
+</div>
+
+<div class="col-md-4">
+    <div class="form-group">
+        <label for="categoryDropdown">Filter by Category:</label>
+        <select class="form-control" id="categoryDropdown" onchange="filterArticles()">
+            <option value="">All Categories</option>
+            @foreach (var categoryDTO in Model.Select(a => a.Title).Distinct())
+            {
+                <option value="@categoryDTO">@categoryDTO</option>
+            }
+        </select>
+    </div>
+</div>
 
 <div class="row">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Article Page</h1>
-    </div>
+    <a href="/Article/Create" class="btn btn-success btn-sm">Create New Article</a>&nbsp;
+    <table class="table table-striped">
+        <tr>
+            <th style="justify-content">Article ID</th>
+            <th style="justify-content">Article Category</th>
+            <th style="justify-content">Article Detail</th>
+            <th style="justify-content">Article Published</th>
+            <th style="justify-content">IsApproved</th>
+            <th>Pic</th>
+            <th style="justify-content">Action</th>
+            <th>&nbsp;</th>
+        </tr>
 
-    <div class="col-lg-12">
-        <!-- Basic Card Example -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Article Page</h6>
-            </div>
-            <div class="card-body">
-                <form method="post" class="form-inline" action="/Article/Search">
-                    <p>
-                        <input type="text" id="search" class="form-control" name="search"
-                               placeholder="search Article name" />
-                        &nbsp;
-                        <input type="submit" class="btn btn-primary btn-sm" value="Search" />
-                    </p>
-                </form>
-
-                <a href="/Article/Create" class="btn btn-success btn-sm">Create New Article</a>&nbsp;
-                <table class="table table-striped">
-                    <tr>
-                        <th>Article ID</th>
-                        <th>Title Name</th>
-                        <th>Detail</th>
-                        <th>IsApproved</th>
-                        <th>Pic</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                    @foreach (var article in Model)
-                    {
-                        <tr>
-                            <td>@article.ArticleID</td>
-                            <td>@article.Title</td>
-                            <td>@article.Details</td>
-                            <td>@article.IsApproved</td>
-                            <td><img src="~/Pics/@article.Pic" alt="Article" style="max-width: 100px; max-height: 100px;"></td>
-
-                            <td><a href="/Article/Edit/@article.ArticleID" class="btn btn-warning btn-sm">edit</a></td>
-                            <td>
-                                <a href="/Article/Delete/@article.ArticleID" class="btn btn-danger btn-sm">delete</a>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
-        </div>
-
-    </div>
-
+        @foreach (var article in Model)
+        {
+            <tr data-category="@article.Title">
+                <td>@article.ArticleID</td>
+                <td>@article.Title</td>
+                <td>@article.Details</td>
+                <td>@article.PublishDate</td>
+                <td>
+                    <button class="btn btn-sm btn-@((article.IsApproved) ? "success" : "danger") toggle-approval" data-article-id="@article.ArticleID">
+                        @(article.IsApproved ? "Yes" : "No")
+                    </button>
+                </td>
+                <td>
+                    <img src="~/Pics/@article.Pic" alt="Article" style="max-width: 100px; max-height: 100px;"
+                         class="article-image" data-toggle="modal" data-target="#imageModal" data-src="~/Pics/@article.Pic">
+                </td>
+                <td>
+                    <a href="/Article/Edit/@article.ArticleID" class="btn btn-warning btn-sm">edit</a>
+                    <a href="/Article/Delete/@article.ArticleID" class="btn btn-danger btn-sm">delete</a>
+                </td>
+            </tr>
+        }
+    </table>
 </div>
+
+@section scripts {
+    <script>
+        function filterArticles() {
+            var selectedCategory = $('#categoryDropdown').val();
+
+            $('table tr').each(function () {
+                var articleCategory = $(this).data('category');
+
+                if (selectedCategory === "" || selectedCategory === articleCategory) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        $('#imageModal').on('show.bs.modal', function (event) {
+            var image = $(event.relatedTarget);
+            var imageUrl = image.prop('src');
+            $('#modalImage').attr('src', imageUrl);
+        });
+    </script>
+}

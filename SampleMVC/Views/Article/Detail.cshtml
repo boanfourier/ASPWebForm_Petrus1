@@ -5,34 +5,20 @@
 
     <div class="col-lg-12">
         <!-- Basic Card Example -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Detail Article</h6>
+        @foreach (var article in Model)
+        {
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Detail Article</h6>
+                </div>
+                <div class="card-body">
+                    Article ID : @article.ArticleID &nbsp;
+                    Article Title : @article.Title &nbsp;
+                    Article Details : @article.Details &nbsp;
+                    Published : @article.PublishDate &nbsp;
+                    Approved : @article.IsApproved ? "Yes" : "No" &nbsp;
+                </div>
             </div>
-            <div class="card-body">
-                Article ID : @Model.ArticleID &nbsp;
-                Article Title : @Model.ArticleName &nbsp;
-                Article Details : @Model.Details &nbsp;
-                Published : @Model.PublishDate &nbsp;
-                Approved : @Model.IsApproved ? "Yes":"No" &nbsp;
-            </div>
-        </div>
-
+        }
     </div>
-
 </div>
-
-
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Detail Article</title>
-</head>
-
-<body>
-
-</body>
-
-</html>

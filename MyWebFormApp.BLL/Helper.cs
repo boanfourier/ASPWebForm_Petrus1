@@ -1,4 +1,6 @@
-﻿namespace MyWebFormApp.BLL
+﻿using System;
+
+namespace MyWebFormApp.BLL
 {
     public class Helper
     {
@@ -13,6 +15,11 @@
                 sb.Append(b.ToString("X2"));
             }
             return sb.ToString();
+        }
+
+        public static bool IsImageFile(string fileName)
+        {
+            throw new NotImplementedException();
         }
     }
 }
