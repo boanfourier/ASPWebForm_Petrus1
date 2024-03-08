@@ -7,11 +7,13 @@ namespace SampleMVC.Controllers
     public class ArticleController : Controller
     {
         private readonly IArticleBLL _articleBLL;
-        public ArticleController(IArticleBLL articleBLL)
+        private readonly ICategoryBLL _categoryBLL;
+        public ArticleController(IArticleBLL articleBLL, ICategoryBLL categoryBLL)
         {
             _articleBLL = articleBLL;
+            _categoryBLL = categoryBLL;
         }
-            public IActionResult Index()
+        public IActionResult Index()
         {
             var models = _articleBLL.GetArticleWithCategory();
             return View(models);
@@ -25,7 +27,9 @@ namespace SampleMVC.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var categoryOptions = _categoryBLL.GetAll();
+
+            return View(categoryOptions);
         }
 
         [HttpPost]
